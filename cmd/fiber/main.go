@@ -29,7 +29,7 @@ func init() {
 			UnescapePath: true,
 		},
 	)
-	app.Get("/ping", func(c *fiber.Ctx) error {
+	app.Get("/ping", RequireJWT(), func(c *fiber.Ctx) error {
 		return c.JSON("pong")
 	})
 

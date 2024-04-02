@@ -26,7 +26,7 @@ func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.AP
 func init() {
 	app := gin.Default()
 
-	app.GET("/ping", func(c *gin.Context) {
+	app.GET("/ping", RequireJWT(), func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
