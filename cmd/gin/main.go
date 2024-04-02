@@ -11,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// https://github.com/awslabs/aws-lambda-go-api-proxy/blob/master/gin/adapterv2.go
+
 var (
 	ginLambda *ginadapter.GinLambdaV2
 

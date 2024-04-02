@@ -10,6 +10,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// https://github.com/awslabs/aws-lambda-go-api-proxy
+
 var (
 	fiberLambda *fiberadapter.FiberLambda
 	app         *fiber.App
