@@ -568,7 +568,7 @@ func testAccountsSelect(t *testing.T) {
 }
 
 var (
-	accountDBTypes = map[string]string{`UserID`: `bigint`, `Username`: `varchar`, `Created`: `timestamp`}
+	accountDBTypes = map[string]string{`UserID`: `bigint`, `Username`: `varchar`, `Provider`: `varchar`, `Updated`: `timestamp`, `UpdatedAt`: `timestamp`, `CreatedAt`: `timestamp`}
 	_              = bytes.MinRead
 )
 

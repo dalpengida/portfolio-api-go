@@ -6,23 +6,19 @@ import (
 	"fmt"
 	"testing"
 
-	_ "github.com/go-sql-driver/mysql"
-	//. "github.com/volatiletech/sqlboiler/v4/queries/qm"
+	//	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 
 	"github.com/dalpengida/portfolio-api-go/models"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-mysql/driver"
 	// Import this so we don't have to use qm.Limit etc.
 )
 
 var ctx = context.Background()
 
-// username:password@protocol(address)/dbname?param=value
-func dsn(host, dbName, username, password string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, host, dbName)
-}
-
 func Test(t *testing.T) {
-	dsn := dsn("localhost:3306", "portfolio", "portfolio", "test")
+	dsn := driver.MySQLBuildQueryString("portfolio", "test", "portfolio", "localhost", 3306, "false") //dsn("localhost:3306", "portfolio", "portfolio", "test")
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		t.Fatal(err)
@@ -43,6 +39,12 @@ func Test(t *testing.T) {
 
 	fmt.Println(account)
 
+	count, err := models.Accounts().Count(ctx, db)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(count)
+
 	accounts, err := models.Accounts().All(ctx, db)
 	if err != nil {
 		t.Fatal(err)
@@ -50,18 +52,33 @@ func Test(t *testing.T) {
 
 	fmt.Printf("%v", accounts)
 
-	// account := models.Account(
-	// 	Select("user_id", "username"),
-	// 	Where("user_id = ?", 1),
-	// 	Limit(1),
-	// ).All(ctx, db)
+	// var item models.Account
+	// item.Username = "dalpengida"
+	// item.Provider = null.NewString("google", true)
 
-	// err = account.Insert(ctx, db)
+	// err = item.Insert(ctx, db, boil.Infer())
 	// if err != nil {
 	// 	t.Fatal(err)
 	// }
 
-	// fmt.Println(account)
+	// i := models.Account{
+	// 	Provider: null.StringFrom("from"),
+	// }
+	// i.Insert(ctx, db, boil.Infer())
+
+	// item.Username = "test00011"
+	// item.Update(ctx, db, boil.Infer())
+
+	item := models.Account{UserID: 2}
+	item.Reload(ctx, db)
+
+	fmt.Println(item)
+
+	item.Provider = null.StringFrom("reloadupdate")
+	_, err = item.Update(ctx, db, boil.Infer())
+	if err != nil {
+		t.Fatal(err)
+	}
 
 }
 

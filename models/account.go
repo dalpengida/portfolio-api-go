@@ -24,32 +24,47 @@ import (
 
 // Account is an object representing the database table.
 type Account struct {
-	UserID   int64       `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
-	Username null.String `boil:"username" json:"username,omitempty" toml:"username" yaml:"username,omitempty"`
-	Created  null.Time   `boil:"created" json:"created,omitempty" toml:"created" yaml:"created,omitempty"`
+	UserID    int64       `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	Username  string      `boil:"username" json:"username" toml:"username" yaml:"username"`
+	Provider  null.String `boil:"provider" json:"provider,omitempty" toml:"provider" yaml:"provider,omitempty"`
+	Updated   null.Time   `boil:"updated" json:"updated,omitempty" toml:"updated" yaml:"updated,omitempty"`
+	UpdatedAt null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	CreatedAt null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
 
 	R *accountR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L accountL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var AccountColumns = struct {
-	UserID   string
-	Username string
-	Created  string
+	UserID    string
+	Username  string
+	Provider  string
+	Updated   string
+	UpdatedAt string
+	CreatedAt string
 }{
-	UserID:   "user_id",
-	Username: "username",
-	Created:  "created",
+	UserID:    "user_id",
+	Username:  "username",
+	Provider:  "provider",
+	Updated:   "updated",
+	UpdatedAt: "updated_at",
+	CreatedAt: "created_at",
 }
 
 var AccountTableColumns = struct {
-	UserID   string
-	Username string
-	Created  string
+	UserID    string
+	Username  string
+	Provider  string
+	Updated   string
+	UpdatedAt string
+	CreatedAt string
 }{
-	UserID:   "account.user_id",
-	Username: "account.username",
-	Created:  "account.created",
+	UserID:    "account.user_id",
+	Username:  "account.username",
+	Provider:  "account.provider",
+	Updated:   "account.updated",
+	UpdatedAt: "account.updated_at",
+	CreatedAt: "account.created_at",
 }
 
 // Generated where
@@ -70,6 +85,31 @@ func (w whereHelperint64) IN(slice []int64) qm.QueryMod {
 	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
 }
 func (w whereHelperint64) NIN(slice []int64) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
+type whereHelperstring struct{ field string }
+
+func (w whereHelperstring) EQ(x string) qm.QueryMod    { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelperstring) NEQ(x string) qm.QueryMod   { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelperstring) LT(x string) qm.QueryMod    { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelperstring) LTE(x string) qm.QueryMod   { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelperstring) GT(x string) qm.QueryMod    { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelperstring) GTE(x string) qm.QueryMod   { return qmhelper.Where(w.field, qmhelper.GTE, x) }
+func (w whereHelperstring) LIKE(x string) qm.QueryMod  { return qm.Where(w.field+" LIKE ?", x) }
+func (w whereHelperstring) NLIKE(x string) qm.QueryMod { return qm.Where(w.field+" NOT LIKE ?", x) }
+func (w whereHelperstring) IN(slice []string) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 	values := make([]interface{}, 0, len(slice))
 	for _, value := range slice {
 		values = append(values, value)
@@ -146,13 +186,19 @@ func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsN
 func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 var AccountWhere = struct {
-	UserID   whereHelperint64
-	Username whereHelpernull_String
-	Created  whereHelpernull_Time
+	UserID    whereHelperint64
+	Username  whereHelperstring
+	Provider  whereHelpernull_String
+	Updated   whereHelpernull_Time
+	UpdatedAt whereHelpernull_Time
+	CreatedAt whereHelpernull_Time
 }{
-	UserID:   whereHelperint64{field: "`account`.`user_id`"},
-	Username: whereHelpernull_String{field: "`account`.`username`"},
-	Created:  whereHelpernull_Time{field: "`account`.`created`"},
+	UserID:    whereHelperint64{field: "`account`.`user_id`"},
+	Username:  whereHelperstring{field: "`account`.`username`"},
+	Provider:  whereHelpernull_String{field: "`account`.`provider`"},
+	Updated:   whereHelpernull_Time{field: "`account`.`updated`"},
+	UpdatedAt: whereHelpernull_Time{field: "`account`.`updated_at`"},
+	CreatedAt: whereHelpernull_Time{field: "`account`.`created_at`"},
 }
 
 // AccountRels is where relationship names are stored.
@@ -172,9 +218,9 @@ func (*accountR) NewStruct() *accountR {
 type accountL struct{}
 
 var (
-	accountAllColumns            = []string{"user_id", "username", "created"}
-	accountColumnsWithoutDefault = []string{"username", "created"}
-	accountColumnsWithDefault    = []string{"user_id"}
+	accountAllColumns            = []string{"user_id", "username", "provider", "updated", "updated_at", "created_at"}
+	accountColumnsWithoutDefault = []string{"username", "provider"}
+	accountColumnsWithDefault    = []string{"user_id", "updated", "updated_at", "created_at"}
 	accountPrimaryKeyColumns     = []string{"user_id"}
 	accountGeneratedColumns      = []string{}
 )
@@ -533,13 +579,6 @@ func (o *Account) Insert(ctx context.Context, exec boil.ContextExecutor, columns
 	}
 
 	var err error
-	if !boil.TimestampsAreSkipped(ctx) {
-		currTime := time.Now().In(boil.GetLocation())
-
-		if queries.MustTime(o.Created).IsZero() {
-			queries.SetScanner(&o.Created, currTime)
-		}
-	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -775,13 +814,6 @@ var mySQLAccountUniqueColumns = []string{
 func (o *Account) Upsert(ctx context.Context, exec boil.ContextExecutor, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
 		return errors.New("models: no account provided for upsert")
-	}
-	if !boil.TimestampsAreSkipped(ctx) {
-		currTime := time.Now().In(boil.GetLocation())
-
-		if queries.MustTime(o.Created).IsZero() {
-			queries.SetScanner(&o.Created, currTime)
-		}
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

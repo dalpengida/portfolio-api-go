@@ -8,5 +8,11 @@
   tinyint_as_int = true
 
 [auto-columns]
-    created = "created"
-    
+    created = "createdAt"
+    updated = "updatedAt"
+
+
+#pkgname="db"
+#output="database/mysql"
+#add-global-variants=true
+#add-panic-variants=true
