@@ -7,6 +7,8 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
+	"github.com/dalpengida/portfolio-api-go-mysql/cmd/fiber/route"
+	"github.com/dalpengida/portfolio-api-go-mysql/database/my"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -24,14 +26,18 @@ func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.AP
 }
 
 func init() {
+	// mysql
+	err := my.SetBoilerDatabas()
+	if err != nil {
+		panic(err)
+	}
+
 	app = fiber.New(
 		fiber.Config{
 			UnescapePath: true,
 		},
 	)
-	app.Get("/ping", RequireJWT(), func(c *fiber.Ctx) error {
-		return c.JSON("pong")
-	})
+	route.SetupV1Route(app)
 
 	if os.Getenv("AWS_EXECUTION_ENV") == "AWS_Lambda_go1.x" {
 		fiberLambda = fiberadapter.New(app)

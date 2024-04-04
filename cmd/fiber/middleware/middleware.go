@@ -1,7 +1,7 @@
-package main
+package middleware
 
 import (
-	"github.com/dalpengida/portfolio-api-go/config"
+	"github.com/dalpengida/portfolio-api-go-mysql/config"
 	"github.com/golang-jwt/jwt/v5"
 
 	jwtware "github.com/gofiber/contrib/jwt"

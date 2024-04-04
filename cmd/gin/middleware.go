@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/dalpengida/portfolio-api-go/config"
+	"github.com/dalpengida/portfolio-api-go-mysql/config"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )

@@ -1,3 +1,8 @@
+#pkgname="my"
+#output="database/my"
+add-global-variants=true
+add-panic-variants=true 
+
 [mysql]
   dbname  = "portfolio"
   host    = "localhost"
@@ -11,8 +16,3 @@
     created = "createdAt"
     updated = "updatedAt"
 
-
-#pkgname="db"
-#output="database/mysql"
-#add-global-variants=true
-#add-panic-variants=true
