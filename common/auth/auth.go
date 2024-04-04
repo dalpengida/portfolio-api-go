@@ -3,7 +3,7 @@ package auth
 import (
 	"time"
 
-	"github.com/dalpengida/portfolio-api-go/config"
+	"github.com/dalpengida/portfolio-api-go-mysql/config"
 
 	"github.com/golang-jwt/jwt/v5"
 )
