@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"net/http"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
+	"github.com/dalpengida/portfolio-api-go-mysql/cmd/gin/route"
+	"github.com/dalpengida/portfolio-api-go-mysql/database/my"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,13 +25,14 @@ func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.AP
 }
 
 func init() {
+	err := my.SetBoilerDatabas()
+	if err != nil {
+		panic(err)
+	}
+
 	app := gin.Default()
 
-	app.GET("/ping", RequireJWT(), func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	route.SetupV1Route(app)
 
 	if os.Getenv("AWS_EXECUTION_ENV") == "AWS_Lambda_go1.x" {
 		ginLambda = ginadapter.NewV2(app)
