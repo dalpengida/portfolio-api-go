@@ -24,12 +24,11 @@ import (
 
 // Account is an object representing the database table.
 type Account struct {
-	UserID    int64       `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
-	Username  string      `boil:"username" json:"username" toml:"username" yaml:"username"`
-	Provider  null.String `boil:"provider" json:"provider,omitempty" toml:"provider" yaml:"provider,omitempty"`
-	Updated   null.Time   `boil:"updated" json:"updated,omitempty" toml:"updated" yaml:"updated,omitempty"`
-	UpdatedAt null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	CreatedAt null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UserID    int64     `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	Username  string    `boil:"username" json:"username" toml:"username" yaml:"username"`
+	Updated   null.Time `boil:"updated" json:"updated,omitempty" toml:"updated" yaml:"updated,omitempty"`
+	UpdatedAt null.Time `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	CreatedAt null.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
 
 	R *accountR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L accountL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -38,14 +37,12 @@ type Account struct {
 var AccountColumns = struct {
 	UserID    string
 	Username  string
-	Provider  string
 	Updated   string
 	UpdatedAt string
 	CreatedAt string
 }{
 	UserID:    "user_id",
 	Username:  "username",
-	Provider:  "provider",
 	Updated:   "updated",
 	UpdatedAt: "updated_at",
 	CreatedAt: "created_at",
@@ -54,14 +51,12 @@ var AccountColumns = struct {
 var AccountTableColumns = struct {
 	UserID    string
 	Username  string
-	Provider  string
 	Updated   string
 	UpdatedAt string
 	CreatedAt string
 }{
 	UserID:    "account.user_id",
 	Username:  "account.username",
-	Provider:  "account.provider",
 	Updated:   "account.updated",
 	UpdatedAt: "account.updated_at",
 	CreatedAt: "account.created_at",
@@ -117,50 +112,6 @@ func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
-type whereHelpernull_String struct{ field string }
-
-func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_String) NEQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_String) LT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_String) LTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_String) GT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_String) GTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-func (w whereHelpernull_String) LIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" LIKE ?", x)
-}
-func (w whereHelpernull_String) NLIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" NOT LIKE ?", x)
-}
-func (w whereHelpernull_String) IN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 type whereHelpernull_Time struct{ field string }
 
 func (w whereHelpernull_Time) EQ(x null.Time) qm.QueryMod {
@@ -188,14 +139,12 @@ func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsN
 var AccountWhere = struct {
 	UserID    whereHelperint64
 	Username  whereHelperstring
-	Provider  whereHelpernull_String
 	Updated   whereHelpernull_Time
 	UpdatedAt whereHelpernull_Time
 	CreatedAt whereHelpernull_Time
 }{
 	UserID:    whereHelperint64{field: "`account`.`user_id`"},
 	Username:  whereHelperstring{field: "`account`.`username`"},
-	Provider:  whereHelpernull_String{field: "`account`.`provider`"},
 	Updated:   whereHelpernull_Time{field: "`account`.`updated`"},
 	UpdatedAt: whereHelpernull_Time{field: "`account`.`updated_at`"},
 	CreatedAt: whereHelpernull_Time{field: "`account`.`created_at`"},
@@ -218,8 +167,8 @@ func (*accountR) NewStruct() *accountR {
 type accountL struct{}
 
 var (
-	accountAllColumns            = []string{"user_id", "username", "provider", "updated", "updated_at", "created_at"}
-	accountColumnsWithoutDefault = []string{"username", "provider"}
+	accountAllColumns            = []string{"user_id", "username", "updated", "updated_at", "created_at"}
+	accountColumnsWithoutDefault = []string{"username"}
 	accountColumnsWithDefault    = []string{"user_id", "updated", "updated_at", "created_at"}
 	accountPrimaryKeyColumns     = []string{"user_id"}
 	accountGeneratedColumns      = []string{}
@@ -458,6 +407,31 @@ func AddAccountHook(hookPoint boil.HookPoint, accountHook AccountHook) {
 	}
 }
 
+// OneG returns a single account record from the query using the global executor.
+func (q accountQuery) OneG(ctx context.Context) (*Account, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
+// OneGP returns a single account record from the query using the global executor, and panics on error.
+func (q accountQuery) OneGP(ctx context.Context) *Account {
+	o, err := q.One(ctx, boil.GetContextDB())
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return o
+}
+
+// OneP returns a single account record from the query, and panics on error.
+func (q accountQuery) OneP(ctx context.Context, exec boil.ContextExecutor) *Account {
+	o, err := q.One(ctx, exec)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return o
+}
+
 // One returns a single account record from the query.
 func (q accountQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Account, error) {
 	o := &Account{}
@@ -477,6 +451,31 @@ func (q accountQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Acco
 	}
 
 	return o, nil
+}
+
+// AllG returns all Account records from the query using the global executor.
+func (q accountQuery) AllG(ctx context.Context) (AccountSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
+}
+
+// AllGP returns all Account records from the query using the global executor, and panics on error.
+func (q accountQuery) AllGP(ctx context.Context) AccountSlice {
+	o, err := q.All(ctx, boil.GetContextDB())
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return o
+}
+
+// AllP returns all Account records from the query, and panics on error.
+func (q accountQuery) AllP(ctx context.Context, exec boil.ContextExecutor) AccountSlice {
+	o, err := q.All(ctx, exec)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return o
 }
 
 // All returns all Account records from the query.
@@ -499,6 +498,31 @@ func (q accountQuery) All(ctx context.Context, exec boil.ContextExecutor) (Accou
 	return o, nil
 }
 
+// CountG returns the count of all Account records in the query using the global executor
+func (q accountQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
+// CountGP returns the count of all Account records in the query using the global executor, and panics on error.
+func (q accountQuery) CountGP(ctx context.Context) int64 {
+	c, err := q.Count(ctx, boil.GetContextDB())
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return c
+}
+
+// CountP returns the count of all Account records in the query, and panics on error.
+func (q accountQuery) CountP(ctx context.Context, exec boil.ContextExecutor) int64 {
+	c, err := q.Count(ctx, exec)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return c
+}
+
 // Count returns the count of all Account records in the query.
 func (q accountQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -512,6 +536,31 @@ func (q accountQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q accountQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
+}
+
+// ExistsGP checks if the row exists in the table using the global executor, and panics on error.
+func (q accountQuery) ExistsGP(ctx context.Context) bool {
+	e, err := q.Exists(ctx, boil.GetContextDB())
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return e
+}
+
+// ExistsP checks if the row exists in the table, and panics on error.
+func (q accountQuery) ExistsP(ctx context.Context, exec boil.ContextExecutor) bool {
+	e, err := q.Exists(ctx, exec)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return e
 }
 
 // Exists checks if the row exists in the table.
@@ -539,6 +588,31 @@ func Accounts(mods ...qm.QueryMod) accountQuery {
 	}
 
 	return accountQuery{q}
+}
+
+// FindAccountG retrieves a single record by ID.
+func FindAccountG(ctx context.Context, userID int64, selectCols ...string) (*Account, error) {
+	return FindAccount(ctx, boil.GetContextDB(), userID, selectCols...)
+}
+
+// FindAccountP retrieves a single record by ID with an executor, and panics on error.
+func FindAccountP(ctx context.Context, exec boil.ContextExecutor, userID int64, selectCols ...string) *Account {
+	retobj, err := FindAccount(ctx, exec, userID, selectCols...)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return retobj
+}
+
+// FindAccountGP retrieves a single record by ID, and panics on error.
+func FindAccountGP(ctx context.Context, userID int64, selectCols ...string) *Account {
+	retobj, err := FindAccount(ctx, boil.GetContextDB(), userID, selectCols...)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return retobj
 }
 
 // FindAccount retrieves a single record by ID with an executor.
@@ -569,6 +643,27 @@ func FindAccount(ctx context.Context, exec boil.ContextExecutor, userID int64, s
 	}
 
 	return accountObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Account) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
+}
+
+// InsertP a single record using an executor, and panics on error. See Insert
+// for whitelist behavior description.
+func (o *Account) InsertP(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) {
+	if err := o.Insert(ctx, exec, columns); err != nil {
+		panic(boil.WrapErr(err))
+	}
+}
+
+// InsertGP a single record, and panics on error. See Insert for whitelist
+// behavior description.
+func (o *Account) InsertGP(ctx context.Context, columns boil.Columns) {
+	if err := o.Insert(ctx, boil.GetContextDB(), columns); err != nil {
+		panic(boil.WrapErr(err))
+	}
 }
 
 // Insert a single record using an executor.
@@ -677,6 +772,34 @@ CacheNoHooks:
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single Account record using the global executor.
+// See Update for more documentation.
+func (o *Account) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
+// UpdateP uses an executor to update the Account, and panics on error.
+// See Update for more documentation.
+func (o *Account) UpdateP(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) int64 {
+	rowsAff, err := o.Update(ctx, exec, columns)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
+// UpdateGP a single Account record using the global executor. Panics on error.
+// See Update for more documentation.
+func (o *Account) UpdateGP(ctx context.Context, columns boil.Columns) int64 {
+	rowsAff, err := o.Update(ctx, boil.GetContextDB(), columns)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
 // Update uses an executor to update the Account.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -740,6 +863,31 @@ func (o *Account) Update(ctx context.Context, exec boil.ContextExecutor, columns
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllP updates all rows with matching column names, and panics on error.
+func (q accountQuery) UpdateAllP(ctx context.Context, exec boil.ContextExecutor, cols M) int64 {
+	rowsAff, err := q.UpdateAll(ctx, exec, cols)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (q accountQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
+// UpdateAllGP updates all rows with the specified column values, and panics on error.
+func (q accountQuery) UpdateAllGP(ctx context.Context, cols M) int64 {
+	rowsAff, err := q.UpdateAll(ctx, boil.GetContextDB(), cols)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q accountQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -755,6 +903,31 @@ func (q accountQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, 
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o AccountSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
+// UpdateAllGP updates all rows with the specified column values, and panics on error.
+func (o AccountSlice) UpdateAllGP(ctx context.Context, cols M) int64 {
+	rowsAff, err := o.UpdateAll(ctx, boil.GetContextDB(), cols)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
+// UpdateAllP updates all rows with the specified column values, and panics on error.
+func (o AccountSlice) UpdateAllP(ctx context.Context, exec boil.ContextExecutor, cols M) int64 {
+	rowsAff, err := o.UpdateAll(ctx, exec, cols)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -803,6 +976,26 @@ func (o AccountSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, 
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all account")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Account) UpsertG(ctx context.Context, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateColumns, insertColumns)
+}
+
+// UpsertGP attempts an insert, and does an update or ignore on conflict. Panics on error.
+func (o *Account) UpsertGP(ctx context.Context, updateColumns, insertColumns boil.Columns) {
+	if err := o.Upsert(ctx, boil.GetContextDB(), updateColumns, insertColumns); err != nil {
+		panic(boil.WrapErr(err))
+	}
+}
+
+// UpsertP attempts an insert using an executor, and does an update or ignore on conflict.
+// UpsertP panics on error.
+func (o *Account) UpsertP(ctx context.Context, exec boil.ContextExecutor, updateColumns, insertColumns boil.Columns) {
+	if err := o.Upsert(ctx, exec, updateColumns, insertColumns); err != nil {
+		panic(boil.WrapErr(err))
+	}
 }
 
 var mySQLAccountUniqueColumns = []string{
@@ -955,6 +1148,36 @@ CacheNoHooks:
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single Account record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Account) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
+// DeleteP deletes a single Account record with an executor.
+// DeleteP will match against the primary key column to find the record to delete.
+// Panics on error.
+func (o *Account) DeleteP(ctx context.Context, exec boil.ContextExecutor) int64 {
+	rowsAff, err := o.Delete(ctx, exec)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
+// DeleteGP deletes a single Account record.
+// DeleteGP will match against the primary key column to find the record to delete.
+// Panics on error.
+func (o *Account) DeleteGP(ctx context.Context) int64 {
+	rowsAff, err := o.Delete(ctx, boil.GetContextDB())
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
 // Delete deletes a single Account record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Account) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -991,6 +1214,30 @@ func (o *Account) Delete(ctx context.Context, exec boil.ContextExecutor) (int64,
 	return rowsAff, nil
 }
 
+func (q accountQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
+// DeleteAllP deletes all rows, and panics on error.
+func (q accountQuery) DeleteAllP(ctx context.Context, exec boil.ContextExecutor) int64 {
+	rowsAff, err := q.DeleteAll(ctx, exec)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
+// DeleteAllGP deletes all rows, and panics on error.
+func (q accountQuery) DeleteAllGP(ctx context.Context) int64 {
+	rowsAff, err := q.DeleteAll(ctx, boil.GetContextDB())
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
 // DeleteAll deletes all matching rows.
 func (q accountQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1010,6 +1257,31 @@ func (q accountQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) 
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o AccountSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
+}
+
+// DeleteAllP deletes all rows in the slice, using an executor, and panics on error.
+func (o AccountSlice) DeleteAllP(ctx context.Context, exec boil.ContextExecutor) int64 {
+	rowsAff, err := o.DeleteAll(ctx, exec)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
+}
+
+// DeleteAllGP deletes all rows in the slice, and panics on error.
+func (o AccountSlice) DeleteAllGP(ctx context.Context) int64 {
+	rowsAff, err := o.DeleteAll(ctx, boil.GetContextDB())
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return rowsAff
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1061,6 +1333,29 @@ func (o AccountSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) 
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Account) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no Account provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
+// ReloadP refetches the object from the database with an executor. Panics on error.
+func (o *Account) ReloadP(ctx context.Context, exec boil.ContextExecutor) {
+	if err := o.Reload(ctx, exec); err != nil {
+		panic(boil.WrapErr(err))
+	}
+}
+
+// ReloadGP refetches the object from the database and panics on error.
+func (o *Account) ReloadGP(ctx context.Context) {
+	if err := o.Reload(ctx, boil.GetContextDB()); err != nil {
+		panic(boil.WrapErr(err))
+	}
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Account) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1071,6 +1366,34 @@ func (o *Account) Reload(ctx context.Context, exec boil.ContextExecutor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *AccountSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty AccountSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
+}
+
+// ReloadAllP refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+// Panics on error.
+func (o *AccountSlice) ReloadAllP(ctx context.Context, exec boil.ContextExecutor) {
+	if err := o.ReloadAll(ctx, exec); err != nil {
+		panic(boil.WrapErr(err))
+	}
+}
+
+// ReloadAllGP refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+// Panics on error.
+func (o *AccountSlice) ReloadAllGP(ctx context.Context) {
+	if err := o.ReloadAll(ctx, boil.GetContextDB()); err != nil {
+		panic(boil.WrapErr(err))
+	}
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1100,6 +1423,31 @@ func (o *AccountSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor)
 	*o = slice
 
 	return nil
+}
+
+// AccountExistsG checks if the Account row exists.
+func AccountExistsG(ctx context.Context, userID int64) (bool, error) {
+	return AccountExists(ctx, boil.GetContextDB(), userID)
+}
+
+// AccountExistsP checks if the Account row exists. Panics on error.
+func AccountExistsP(ctx context.Context, exec boil.ContextExecutor, userID int64) bool {
+	e, err := AccountExists(ctx, exec, userID)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return e
+}
+
+// AccountExistsGP checks if the Account row exists. Panics on error.
+func AccountExistsGP(ctx context.Context, userID int64) bool {
+	e, err := AccountExists(ctx, boil.GetContextDB(), userID)
+	if err != nil {
+		panic(boil.WrapErr(err))
+	}
+
+	return e
 }
 
 // AccountExists checks if the Account row exists.

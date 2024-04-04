@@ -13,69 +13,105 @@ import "testing"
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
 	t.Run("Accounts", testAccounts)
+	t.Run("Idps", testIdps)
+	t.Run("Usernames", testUsernames)
 }
 
 func TestDelete(t *testing.T) {
 	t.Run("Accounts", testAccountsDelete)
+	t.Run("Idps", testIdpsDelete)
+	t.Run("Usernames", testUsernamesDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("Accounts", testAccountsQueryDeleteAll)
+	t.Run("Idps", testIdpsQueryDeleteAll)
+	t.Run("Usernames", testUsernamesQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("Accounts", testAccountsSliceDeleteAll)
+	t.Run("Idps", testIdpsSliceDeleteAll)
+	t.Run("Usernames", testUsernamesSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
 	t.Run("Accounts", testAccountsExists)
+	t.Run("Idps", testIdpsExists)
+	t.Run("Usernames", testUsernamesExists)
 }
 
 func TestFind(t *testing.T) {
 	t.Run("Accounts", testAccountsFind)
+	t.Run("Idps", testIdpsFind)
+	t.Run("Usernames", testUsernamesFind)
 }
 
 func TestBind(t *testing.T) {
 	t.Run("Accounts", testAccountsBind)
+	t.Run("Idps", testIdpsBind)
+	t.Run("Usernames", testUsernamesBind)
 }
 
 func TestOne(t *testing.T) {
 	t.Run("Accounts", testAccountsOne)
+	t.Run("Idps", testIdpsOne)
+	t.Run("Usernames", testUsernamesOne)
 }
 
 func TestAll(t *testing.T) {
 	t.Run("Accounts", testAccountsAll)
+	t.Run("Idps", testIdpsAll)
+	t.Run("Usernames", testUsernamesAll)
 }
 
 func TestCount(t *testing.T) {
 	t.Run("Accounts", testAccountsCount)
+	t.Run("Idps", testIdpsCount)
+	t.Run("Usernames", testUsernamesCount)
 }
 
 func TestHooks(t *testing.T) {
 	t.Run("Accounts", testAccountsHooks)
+	t.Run("Idps", testIdpsHooks)
+	t.Run("Usernames", testUsernamesHooks)
 }
 
 func TestInsert(t *testing.T) {
 	t.Run("Accounts", testAccountsInsert)
 	t.Run("Accounts", testAccountsInsertWhitelist)
+	t.Run("Idps", testIdpsInsert)
+	t.Run("Idps", testIdpsInsertWhitelist)
+	t.Run("Usernames", testUsernamesInsert)
+	t.Run("Usernames", testUsernamesInsertWhitelist)
 }
 
 func TestReload(t *testing.T) {
 	t.Run("Accounts", testAccountsReload)
+	t.Run("Idps", testIdpsReload)
+	t.Run("Usernames", testUsernamesReload)
 }
 
 func TestReloadAll(t *testing.T) {
 	t.Run("Accounts", testAccountsReloadAll)
+	t.Run("Idps", testIdpsReloadAll)
+	t.Run("Usernames", testUsernamesReloadAll)
 }
 
 func TestSelect(t *testing.T) {
 	t.Run("Accounts", testAccountsSelect)
+	t.Run("Idps", testIdpsSelect)
+	t.Run("Usernames", testUsernamesSelect)
 }
 
 func TestUpdate(t *testing.T) {
 	t.Run("Accounts", testAccountsUpdate)
+	t.Run("Idps", testIdpsUpdate)
+	t.Run("Usernames", testUsernamesUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("Accounts", testAccountsSliceUpdateAll)
+	t.Run("Idps", testIdpsSliceUpdateAll)
+	t.Run("Usernames", testUsernamesSliceUpdateAll)
 }

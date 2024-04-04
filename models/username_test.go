@@ -21,24 +21,24 @@ var (
 	_ = queries.Equal
 )
 
-func testAccounts(t *testing.T) {
+func testUsernames(t *testing.T) {
 	t.Parallel()
 
-	query := Accounts()
+	query := Usernames()
 
 	if query.Query == nil {
 		t.Error("expected a query, got nothing")
 	}
 }
 
-func testAccountsDelete(t *testing.T) {
+func testUsernamesDelete(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -54,7 +54,7 @@ func testAccountsDelete(t *testing.T) {
 		t.Error("should only have deleted one row, but affected:", rowsAff)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -64,14 +64,14 @@ func testAccountsDelete(t *testing.T) {
 	}
 }
 
-func testAccountsQueryDeleteAll(t *testing.T) {
+func testUsernamesQueryDeleteAll(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -81,13 +81,13 @@ func testAccountsQueryDeleteAll(t *testing.T) {
 		t.Error(err)
 	}
 
-	if rowsAff, err := Accounts().DeleteAll(ctx, tx); err != nil {
+	if rowsAff, err := Usernames().DeleteAll(ctx, tx); err != nil {
 		t.Error(err)
 	} else if rowsAff != 1 {
 		t.Error("should only have deleted one row, but affected:", rowsAff)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -97,14 +97,14 @@ func testAccountsQueryDeleteAll(t *testing.T) {
 	}
 }
 
-func testAccountsSliceDeleteAll(t *testing.T) {
+func testUsernamesSliceDeleteAll(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -114,7 +114,7 @@ func testAccountsSliceDeleteAll(t *testing.T) {
 		t.Error(err)
 	}
 
-	slice := AccountSlice{o}
+	slice := UsernameSlice{o}
 
 	if rowsAff, err := slice.DeleteAll(ctx, tx); err != nil {
 		t.Error(err)
@@ -122,7 +122,7 @@ func testAccountsSliceDeleteAll(t *testing.T) {
 		t.Error("should only have deleted one row, but affected:", rowsAff)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -132,14 +132,14 @@ func testAccountsSliceDeleteAll(t *testing.T) {
 	}
 }
 
-func testAccountsExists(t *testing.T) {
+func testUsernamesExists(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -149,23 +149,23 @@ func testAccountsExists(t *testing.T) {
 		t.Error(err)
 	}
 
-	e, err := AccountExists(ctx, tx, o.UserID)
+	e, err := UsernameExists(ctx, tx, o.ID)
 	if err != nil {
-		t.Errorf("Unable to check if Account exists: %s", err)
+		t.Errorf("Unable to check if Username exists: %s", err)
 	}
 	if !e {
-		t.Errorf("Expected AccountExists to return true, but got false.")
+		t.Errorf("Expected UsernameExists to return true, but got false.")
 	}
 }
 
-func testAccountsFind(t *testing.T) {
+func testUsernamesFind(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -175,24 +175,24 @@ func testAccountsFind(t *testing.T) {
 		t.Error(err)
 	}
 
-	accountFound, err := FindAccount(ctx, tx, o.UserID)
+	usernameFound, err := FindUsername(ctx, tx, o.ID)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if accountFound == nil {
+	if usernameFound == nil {
 		t.Error("want a record, got nil")
 	}
 }
 
-func testAccountsBind(t *testing.T) {
+func testUsernamesBind(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -202,19 +202,19 @@ func testAccountsBind(t *testing.T) {
 		t.Error(err)
 	}
 
-	if err = Accounts().Bind(ctx, tx, o); err != nil {
+	if err = Usernames().Bind(ctx, tx, o); err != nil {
 		t.Error(err)
 	}
 }
 
-func testAccountsOne(t *testing.T) {
+func testUsernamesOne(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -224,38 +224,38 @@ func testAccountsOne(t *testing.T) {
 		t.Error(err)
 	}
 
-	if x, err := Accounts().One(ctx, tx); err != nil {
+	if x, err := Usernames().One(ctx, tx); err != nil {
 		t.Error(err)
 	} else if x == nil {
 		t.Error("expected to get a non nil record")
 	}
 }
 
-func testAccountsAll(t *testing.T) {
+func testUsernamesAll(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	accountOne := &Account{}
-	accountTwo := &Account{}
-	if err = randomize.Struct(seed, accountOne, accountDBTypes, false, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	usernameOne := &Username{}
+	usernameTwo := &Username{}
+	if err = randomize.Struct(seed, usernameOne, usernameDBTypes, false, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
-	if err = randomize.Struct(seed, accountTwo, accountDBTypes, false, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	if err = randomize.Struct(seed, usernameTwo, usernameDBTypes, false, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
 	tx := MustTx(boil.BeginTx(ctx, nil))
 	defer func() { _ = tx.Rollback() }()
-	if err = accountOne.Insert(ctx, tx, boil.Infer()); err != nil {
+	if err = usernameOne.Insert(ctx, tx, boil.Infer()); err != nil {
 		t.Error(err)
 	}
-	if err = accountTwo.Insert(ctx, tx, boil.Infer()); err != nil {
+	if err = usernameTwo.Insert(ctx, tx, boil.Infer()); err != nil {
 		t.Error(err)
 	}
 
-	slice, err := Accounts().All(ctx, tx)
+	slice, err := Usernames().All(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -265,31 +265,31 @@ func testAccountsAll(t *testing.T) {
 	}
 }
 
-func testAccountsCount(t *testing.T) {
+func testUsernamesCount(t *testing.T) {
 	t.Parallel()
 
 	var err error
 	seed := randomize.NewSeed()
-	accountOne := &Account{}
-	accountTwo := &Account{}
-	if err = randomize.Struct(seed, accountOne, accountDBTypes, false, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	usernameOne := &Username{}
+	usernameTwo := &Username{}
+	if err = randomize.Struct(seed, usernameOne, usernameDBTypes, false, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
-	if err = randomize.Struct(seed, accountTwo, accountDBTypes, false, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	if err = randomize.Struct(seed, usernameTwo, usernameDBTypes, false, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
 	tx := MustTx(boil.BeginTx(ctx, nil))
 	defer func() { _ = tx.Rollback() }()
-	if err = accountOne.Insert(ctx, tx, boil.Infer()); err != nil {
+	if err = usernameOne.Insert(ctx, tx, boil.Infer()); err != nil {
 		t.Error(err)
 	}
-	if err = accountTwo.Insert(ctx, tx, boil.Infer()); err != nil {
+	if err = usernameTwo.Insert(ctx, tx, boil.Infer()); err != nil {
 		t.Error(err)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -299,155 +299,155 @@ func testAccountsCount(t *testing.T) {
 	}
 }
 
-func accountBeforeInsertHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameBeforeInsertHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountAfterInsertHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameAfterInsertHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountAfterSelectHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameAfterSelectHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountBeforeUpdateHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameBeforeUpdateHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountAfterUpdateHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameAfterUpdateHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountBeforeDeleteHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameBeforeDeleteHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountAfterDeleteHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameAfterDeleteHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountBeforeUpsertHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameBeforeUpsertHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func accountAfterUpsertHook(ctx context.Context, e boil.ContextExecutor, o *Account) error {
-	*o = Account{}
+func usernameAfterUpsertHook(ctx context.Context, e boil.ContextExecutor, o *Username) error {
+	*o = Username{}
 	return nil
 }
 
-func testAccountsHooks(t *testing.T) {
+func testUsernamesHooks(t *testing.T) {
 	t.Parallel()
 
 	var err error
 
 	ctx := context.Background()
-	empty := &Account{}
-	o := &Account{}
+	empty := &Username{}
+	o := &Username{}
 
 	seed := randomize.NewSeed()
-	if err = randomize.Struct(seed, o, accountDBTypes, false); err != nil {
-		t.Errorf("Unable to randomize Account object: %s", err)
+	if err = randomize.Struct(seed, o, usernameDBTypes, false); err != nil {
+		t.Errorf("Unable to randomize Username object: %s", err)
 	}
 
-	AddAccountHook(boil.BeforeInsertHook, accountBeforeInsertHook)
+	AddUsernameHook(boil.BeforeInsertHook, usernameBeforeInsertHook)
 	if err = o.doBeforeInsertHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doBeforeInsertHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected BeforeInsertHook function to empty object, but got: %#v", o)
 	}
-	accountBeforeInsertHooks = []AccountHook{}
+	usernameBeforeInsertHooks = []UsernameHook{}
 
-	AddAccountHook(boil.AfterInsertHook, accountAfterInsertHook)
+	AddUsernameHook(boil.AfterInsertHook, usernameAfterInsertHook)
 	if err = o.doAfterInsertHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doAfterInsertHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected AfterInsertHook function to empty object, but got: %#v", o)
 	}
-	accountAfterInsertHooks = []AccountHook{}
+	usernameAfterInsertHooks = []UsernameHook{}
 
-	AddAccountHook(boil.AfterSelectHook, accountAfterSelectHook)
+	AddUsernameHook(boil.AfterSelectHook, usernameAfterSelectHook)
 	if err = o.doAfterSelectHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doAfterSelectHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected AfterSelectHook function to empty object, but got: %#v", o)
 	}
-	accountAfterSelectHooks = []AccountHook{}
+	usernameAfterSelectHooks = []UsernameHook{}
 
-	AddAccountHook(boil.BeforeUpdateHook, accountBeforeUpdateHook)
+	AddUsernameHook(boil.BeforeUpdateHook, usernameBeforeUpdateHook)
 	if err = o.doBeforeUpdateHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doBeforeUpdateHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected BeforeUpdateHook function to empty object, but got: %#v", o)
 	}
-	accountBeforeUpdateHooks = []AccountHook{}
+	usernameBeforeUpdateHooks = []UsernameHook{}
 
-	AddAccountHook(boil.AfterUpdateHook, accountAfterUpdateHook)
+	AddUsernameHook(boil.AfterUpdateHook, usernameAfterUpdateHook)
 	if err = o.doAfterUpdateHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doAfterUpdateHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected AfterUpdateHook function to empty object, but got: %#v", o)
 	}
-	accountAfterUpdateHooks = []AccountHook{}
+	usernameAfterUpdateHooks = []UsernameHook{}
 
-	AddAccountHook(boil.BeforeDeleteHook, accountBeforeDeleteHook)
+	AddUsernameHook(boil.BeforeDeleteHook, usernameBeforeDeleteHook)
 	if err = o.doBeforeDeleteHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doBeforeDeleteHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected BeforeDeleteHook function to empty object, but got: %#v", o)
 	}
-	accountBeforeDeleteHooks = []AccountHook{}
+	usernameBeforeDeleteHooks = []UsernameHook{}
 
-	AddAccountHook(boil.AfterDeleteHook, accountAfterDeleteHook)
+	AddUsernameHook(boil.AfterDeleteHook, usernameAfterDeleteHook)
 	if err = o.doAfterDeleteHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doAfterDeleteHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected AfterDeleteHook function to empty object, but got: %#v", o)
 	}
-	accountAfterDeleteHooks = []AccountHook{}
+	usernameAfterDeleteHooks = []UsernameHook{}
 
-	AddAccountHook(boil.BeforeUpsertHook, accountBeforeUpsertHook)
+	AddUsernameHook(boil.BeforeUpsertHook, usernameBeforeUpsertHook)
 	if err = o.doBeforeUpsertHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doBeforeUpsertHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected BeforeUpsertHook function to empty object, but got: %#v", o)
 	}
-	accountBeforeUpsertHooks = []AccountHook{}
+	usernameBeforeUpsertHooks = []UsernameHook{}
 
-	AddAccountHook(boil.AfterUpsertHook, accountAfterUpsertHook)
+	AddUsernameHook(boil.AfterUpsertHook, usernameAfterUpsertHook)
 	if err = o.doAfterUpsertHooks(ctx, nil); err != nil {
 		t.Errorf("Unable to execute doAfterUpsertHooks: %s", err)
 	}
 	if !reflect.DeepEqual(o, empty) {
 		t.Errorf("Expected AfterUpsertHook function to empty object, but got: %#v", o)
 	}
-	accountAfterUpsertHooks = []AccountHook{}
+	usernameAfterUpsertHooks = []UsernameHook{}
 }
 
-func testAccountsInsert(t *testing.T) {
+func testUsernamesInsert(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -457,7 +457,7 @@ func testAccountsInsert(t *testing.T) {
 		t.Error(err)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -467,24 +467,24 @@ func testAccountsInsert(t *testing.T) {
 	}
 }
 
-func testAccountsInsertWhitelist(t *testing.T) {
+func testUsernamesInsertWhitelist(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
 	tx := MustTx(boil.BeginTx(ctx, nil))
 	defer func() { _ = tx.Rollback() }()
-	if err = o.Insert(ctx, tx, boil.Whitelist(accountColumnsWithoutDefault...)); err != nil {
+	if err = o.Insert(ctx, tx, boil.Whitelist(usernameColumnsWithoutDefault...)); err != nil {
 		t.Error(err)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -494,14 +494,14 @@ func testAccountsInsertWhitelist(t *testing.T) {
 	}
 }
 
-func testAccountsReload(t *testing.T) {
+func testUsernamesReload(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -516,14 +516,14 @@ func testAccountsReload(t *testing.T) {
 	}
 }
 
-func testAccountsReloadAll(t *testing.T) {
+func testUsernamesReloadAll(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -533,21 +533,21 @@ func testAccountsReloadAll(t *testing.T) {
 		t.Error(err)
 	}
 
-	slice := AccountSlice{o}
+	slice := UsernameSlice{o}
 
 	if err = slice.ReloadAll(ctx, tx); err != nil {
 		t.Error(err)
 	}
 }
 
-func testAccountsSelect(t *testing.T) {
+func testUsernamesSelect(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -557,7 +557,7 @@ func testAccountsSelect(t *testing.T) {
 		t.Error(err)
 	}
 
-	slice, err := Accounts().All(ctx, tx)
+	slice, err := Usernames().All(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -568,25 +568,25 @@ func testAccountsSelect(t *testing.T) {
 }
 
 var (
-	accountDBTypes = map[string]string{`UserID`: `bigint`, `Username`: `varchar`, `Updated`: `timestamp`, `UpdatedAt`: `timestamp`, `CreatedAt`: `timestamp`}
-	_              = bytes.MinRead
+	usernameDBTypes = map[string]string{`ID`: `bigint`, `UserID`: `bigint`, `Username`: `varchar`}
+	_               = bytes.MinRead
 )
 
-func testAccountsUpdate(t *testing.T) {
+func testUsernamesUpdate(t *testing.T) {
 	t.Parallel()
 
-	if 0 == len(accountPrimaryKeyColumns) {
+	if 0 == len(usernamePrimaryKeyColumns) {
 		t.Skip("Skipping table with no primary key columns")
 	}
-	if len(accountAllColumns) == len(accountPrimaryKeyColumns) {
+	if len(usernameAllColumns) == len(usernamePrimaryKeyColumns) {
 		t.Skip("Skipping table with only primary key columns")
 	}
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -596,7 +596,7 @@ func testAccountsUpdate(t *testing.T) {
 		t.Error(err)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -605,8 +605,8 @@ func testAccountsUpdate(t *testing.T) {
 		t.Error("want one record, got:", count)
 	}
 
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountPrimaryKeyColumns...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernamePrimaryKeyColumns...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	if rowsAff, err := o.Update(ctx, tx, boil.Infer()); err != nil {
@@ -616,18 +616,18 @@ func testAccountsUpdate(t *testing.T) {
 	}
 }
 
-func testAccountsSliceUpdateAll(t *testing.T) {
+func testUsernamesSliceUpdateAll(t *testing.T) {
 	t.Parallel()
 
-	if len(accountAllColumns) == len(accountPrimaryKeyColumns) {
+	if len(usernameAllColumns) == len(usernamePrimaryKeyColumns) {
 		t.Skip("Skipping table with only primary key columns")
 	}
 
 	seed := randomize.NewSeed()
 	var err error
-	o := &Account{}
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountColumnsWithDefault...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := &Username{}
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernameColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
@@ -637,7 +637,7 @@ func testAccountsSliceUpdateAll(t *testing.T) {
 		t.Error(err)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -646,18 +646,18 @@ func testAccountsSliceUpdateAll(t *testing.T) {
 		t.Error("want one record, got:", count)
 	}
 
-	if err = randomize.Struct(seed, o, accountDBTypes, true, accountPrimaryKeyColumns...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	if err = randomize.Struct(seed, o, usernameDBTypes, true, usernamePrimaryKeyColumns...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	// Remove Primary keys and unique columns from what we plan to update
 	var fields []string
-	if strmangle.StringSliceMatch(accountAllColumns, accountPrimaryKeyColumns) {
-		fields = accountAllColumns
+	if strmangle.StringSliceMatch(usernameAllColumns, usernamePrimaryKeyColumns) {
+		fields = usernameAllColumns
 	} else {
 		fields = strmangle.SetComplement(
-			accountAllColumns,
-			accountPrimaryKeyColumns,
+			usernameAllColumns,
+			usernamePrimaryKeyColumns,
 		)
 	}
 
@@ -675,7 +675,7 @@ func testAccountsSliceUpdateAll(t *testing.T) {
 		}
 	}
 
-	slice := AccountSlice{o}
+	slice := UsernameSlice{o}
 	if rowsAff, err := slice.UpdateAll(ctx, tx, updateMap); err != nil {
 		t.Error(err)
 	} else if rowsAff != 1 {
@@ -683,32 +683,32 @@ func testAccountsSliceUpdateAll(t *testing.T) {
 	}
 }
 
-func testAccountsUpsert(t *testing.T) {
+func testUsernamesUpsert(t *testing.T) {
 	t.Parallel()
 
-	if len(accountAllColumns) == len(accountPrimaryKeyColumns) {
+	if len(usernameAllColumns) == len(usernamePrimaryKeyColumns) {
 		t.Skip("Skipping table with only primary key columns")
 	}
-	if len(mySQLAccountUniqueColumns) == 0 {
+	if len(mySQLUsernameUniqueColumns) == 0 {
 		t.Skip("Skipping table with no unique columns to conflict on")
 	}
 
 	seed := randomize.NewSeed()
 	var err error
 	// Attempt the INSERT side of an UPSERT
-	o := Account{}
-	if err = randomize.Struct(seed, &o, accountDBTypes, false); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	o := Username{}
+	if err = randomize.Struct(seed, &o, usernameDBTypes, false); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	ctx := context.Background()
 	tx := MustTx(boil.BeginTx(ctx, nil))
 	defer func() { _ = tx.Rollback() }()
 	if err = o.Upsert(ctx, tx, boil.Infer(), boil.Infer()); err != nil {
-		t.Errorf("Unable to upsert Account: %s", err)
+		t.Errorf("Unable to upsert Username: %s", err)
 	}
 
-	count, err := Accounts().Count(ctx, tx)
+	count, err := Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -717,15 +717,15 @@ func testAccountsUpsert(t *testing.T) {
 	}
 
 	// Attempt the UPDATE side of an UPSERT
-	if err = randomize.Struct(seed, &o, accountDBTypes, false, accountPrimaryKeyColumns...); err != nil {
-		t.Errorf("Unable to randomize Account struct: %s", err)
+	if err = randomize.Struct(seed, &o, usernameDBTypes, false, usernamePrimaryKeyColumns...); err != nil {
+		t.Errorf("Unable to randomize Username struct: %s", err)
 	}
 
 	if err = o.Upsert(ctx, tx, boil.Infer(), boil.Infer()); err != nil {
-		t.Errorf("Unable to upsert Account: %s", err)
+		t.Errorf("Unable to upsert Username: %s", err)
 	}
 
-	count, err = Accounts().Count(ctx, tx)
+	count, err = Usernames().Count(ctx, tx)
 	if err != nil {
 		t.Error(err)
 	}
